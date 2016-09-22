@@ -64,13 +64,11 @@ public:
     auto meta() const noexcept -> const std::vector<hpack::header_t>&;
 
     template<class Header>
-    boost::optional<hpack::header_t>
+    boost::optional<const hpack::header_t&>
     get_header() const {
-        return get_header(Header::name());
+        return hpack::header::find_first(meta(), Header::name());
     }
 
-private:
-    auto get_header(const hpack::header::data_t& key) const -> boost::optional<hpack::header_t>;
 };
 
 } // namespace framework
