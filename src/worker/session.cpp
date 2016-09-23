@@ -311,12 +311,18 @@ void worker_session_t::process_invoke(std::map<std::uint64_t, std::shared_ptr<sh
     auto parent_id = message.get_header<hpack::headers::parent_id<>>();
 
     boost::optional<trace_t> trace;
-    if(trace_id && span_id && parent_id) {
-        trace = trace_t(
-            hpack::header::binary_unpack<uint64_t>(message.get_header<hpack::headers::trace_id<>>()->value()),
-            hpack::header::binary_unpack<uint64_t>(message.get_header<hpack::headers::span_id<>>()->value()),
-            hpack::header::binary_unpack<uint64_t>(message.get_header<hpack::headers::parent_id<>>()->value()),
-            event);
+    if(trace_id && span_id && parent_id &&
+            !trace_id->value().empty() && !span_id->value().empty() && ! parent_id->value().empty()) {
+        try {
+            trace = trace_t(
+                    hpack::header::binary_unpack<uint64_t>(message.get_header<hpack::headers::trace_id<>>()->value()),
+                    hpack::header::binary_unpack<uint64_t>(message.get_header<hpack::headers::span_id<>>()->value()),
+                    hpack::header::binary_unpack<uint64_t>(message.get_header<hpack::headers::parent_id<>>()->value()),
+                    event);
+        } catch (const std::exception& e) {
+            throw;
+            CF_DBG("could not decode tracing headers - %s", e.what());
+        }
     }
 
     trace_t::restore_scope_t scope(trace);
