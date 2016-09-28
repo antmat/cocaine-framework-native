@@ -320,7 +320,6 @@ void worker_session_t::process_invoke(std::map<std::uint64_t, std::shared_ptr<sh
                     hpack::header::binary_unpack<uint64_t>(message.get_header<hpack::headers::parent_id<>>()->value()),
                     event);
         } catch (const std::exception& e) {
-            throw;
             CF_DBG("could not decode tracing headers - %s", e.what());
         }
     }
