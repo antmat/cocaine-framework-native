@@ -64,9 +64,10 @@ public:
     auto meta() const noexcept -> const std::vector<hpack::header_t>&;
 
     template<class Header>
-    boost::optional<const hpack::header_t&>
+    boost::optional<hpack::header_t>
     get_header() const {
-        return hpack::header::find_first(meta(), Header::name());
+        auto header = hpack::header::find_first(meta(), Header::name());
+        return header ? boost::make_optional(*header) : boost::none;
     }
 
 };
