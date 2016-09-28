@@ -315,9 +315,9 @@ void worker_session_t::process_invoke(std::map<std::uint64_t, std::shared_ptr<sh
             !trace_id->value().empty() && !span_id->value().empty() && ! parent_id->value().empty()) {
         try {
             trace = trace_t(
-                    hpack::header::binary_unpack<uint64_t>(message.get_header<hpack::headers::trace_id<>>()->value()),
-                    hpack::header::binary_unpack<uint64_t>(message.get_header<hpack::headers::span_id<>>()->value()),
-                    hpack::header::binary_unpack<uint64_t>(message.get_header<hpack::headers::parent_id<>>()->value()),
+                    hpack::header::unpack<uint64_t>(message.get_header<hpack::headers::trace_id<>>()->value()),
+                    hpack::header::unpack<uint64_t>(message.get_header<hpack::headers::span_id<>>()->value()),
+                    hpack::header::unpack<uint64_t>(message.get_header<hpack::headers::parent_id<>>()->value()),
                     event);
         } catch (const std::exception& e) {
             CF_DBG("could not decode tracing headers - %s", e.what());
