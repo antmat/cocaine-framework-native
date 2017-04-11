@@ -1,3 +1,9 @@
+cocaine-framework-native (0.12.13-2) unstable; urgency=low
+
+  * Rebuild with cocaine 0.12.13.1 with disabled hpack compression in encoder.
+
+ -- Anton Matveenko <antmat@me.com>  Tue, 11 Apr 2017 19:44:10 +0300
+
 cocaine-framework-native (0.12.13-1) unstable; urgency=low
 
   * Changed: use map for slots instead of array
